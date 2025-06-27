@@ -12,27 +12,30 @@ public class Tarea
 }
 
 
-
 class Program
 {
 
-
-    public static void BusquedaTareasPorDescripcion(List<Tarea> tareasPendientes)
+    public void BusquedaTareasPorDescripcion(List<Tarea> tareasPendientes)
     {
-
-        Console.Write("Ingrese la descripcion de la tarea a buscar: ");
+        Console.Write("\nIngrese la descripcion de la tarea a buscar: ");
         string stringDescrip = Console.ReadLine();
 
         List<Tarea> tarea = tareasPendientes.FindAll(t => t.Descripcion == stringDescrip);
 
-        foreach (Tarea t in tarea)
+        if (tarea.Count == 0)
         {
-            Console.WriteLine($"ID: {t.TareaID}, Descripción: {t.Descripcion}, Duración: {t.Duracion} minutos");
+            Console.WriteLine("\nNo se encontraron tareas con esa descripción.");
         }
+        else
+        {
+            MostrarTareas(tarea, "buscadas por descripcion:");
+        }
+        
     }
 
 
-    public static void MostrarTareas(List<Tarea> tarea, string nombre)
+
+    public void MostrarTareas(List<Tarea> tarea, string nombre)
     {
         Console.WriteLine("\nTareas " + nombre + ":");
         foreach (Tarea t in tarea)
@@ -43,21 +46,17 @@ class Program
 
 
 
-
-
-    static void Main()
+    public List<Tarea> crearTareas(List<Tarea> tareasPendientes)
     {
-        List<Tarea> tareasPendientes = new List<Tarea>();
-
-        Console.Write("¿Cuántas tareas querés generar?: ");
-        string numString = Console.ReadLine();
+    
         int num;
-
-        while (!int.TryParse(numString, out num))
+        string numString;
+        do
         {
-            Console.Write("¿Cuántas tareas querés generar?: ");
+            Console.Write("\n¿Cuántas tareas querés generar?: ");
             numString = Console.ReadLine();
         }
+        while (!int.TryParse(numString, out num));
 
         for (int i = 0; i < num; i++)
         {
@@ -65,62 +64,107 @@ class Program
             nuevaTarea.TareaID = i + 1;
 
             //----------DESCRIPCION----------
-            Console.Write("Ingrese la descripcion de la tarea " + nuevaTarea.TareaID + ": ");
+            Console.Write("\nIngrese la descripcion de la tarea " + nuevaTarea.TareaID + ": ");
             nuevaTarea.Descripcion = Console.ReadLine();
 
             //----------DURACION----------
-            Console.Write("Ingrese la duracion de la tarea (minutos): ");
-            string numeroString = Console.ReadLine();
+            string numeroString;
             int numero;
-            while (!int.TryParse(numeroString, out numero) || 10 > numero || numero > 100  )
+            do
             {
-                Console.Write("Ingrese la duracion de la tarea (minutos): ");
+                Console.Write("\nIngrese la duración de la tarea (minutos): ");
                 numeroString = Console.ReadLine();
             }
+            while (!int.TryParse(numeroString, out numero) || numero < 10 || numero > 100);
             nuevaTarea.Duracion = numero;
 
             tareasPendientes.Add(nuevaTarea); // la agrego a la lista
         }
+        return tareasPendientes;
+    }
 
-        
-         MostrarTareas(tareasPendientes, "pendientes"); 
 
 
-        List<Tarea> tareasRealizadas = new List<Tarea>();
+    public List<Tarea> pendientesArealizadas(List<Tarea> realizadas, List<Tarea> pendientes)
+    {
 
-        Console.Write("Ingrese el ID de la tarea que completó: ");
+        Console.Write("\nIngrese el ID de la tarea que completó: ");
         string tareaRealizadaID = Console.ReadLine();
         int id;
 
         if (int.TryParse(tareaRealizadaID, out id))
         {
-            Tarea tarea = tareasPendientes.Find(t => t.TareaID == id);
+            Tarea tarea = pendientes.Find(t => t.TareaID == id);
 
             if (tarea != null)
             {
-                tareasRealizadas.Add(tarea);
-                tareasPendientes.Remove(tarea);
-                Console.WriteLine("Tarea movida a realizadas.");
+                realizadas.Add(tarea);
+                pendientes.Remove(tarea);
+                Console.WriteLine("\nTarea movida a realizadas.");
             }
             else
             {
-                Console.WriteLine("Tarea no encontrada.");
+                Console.WriteLine("\nTarea no encontrada.");
             }
         }
         else
         {
-            Console.WriteLine("ERROR. No ingresó un número...");
+            Console.WriteLine("\nERROR. No ingresó un número...");
         }
-
-
-        MostrarTareas(tareasPendientes, "pendientes");
-
-        MostrarTareas(tareasRealizadas, "realizadas");
-
-        BusquedaTareasPorDescripcion(tareasPendientes);
-
+        return realizadas;
     }
 
+
+
+    static void Main()
+    {
+        Program p = new Program();
+
+        List<Tarea> tareasPendientes = new List<Tarea>();
+        List<Tarea> tareasRealizadas = new List<Tarea>();
+
+        bool salir = false;
+
+        while (!salir)
+        {
+            Console.WriteLine("\n  ======== MENÚ PRINCIPAL ========  ");
+            Console.WriteLine("1. Crear tareas");
+            Console.WriteLine("2. Mostrar tareas");
+            Console.WriteLine("3. Marcar tarea pendiente como realizada");
+            Console.WriteLine("4. Buscar tareas pendientes por descripción");
+            Console.WriteLine("5. Salir");
+
+            string input;
+            int opcionNum;
+            do
+            {
+                Console.Write("Seleccione una opción (1 a 5): ");
+                input = Console.ReadLine();
+            } while (!int.TryParse(input, out opcionNum) || opcionNum>5 || opcionNum<1);
+
+            switch (opcionNum)
+            {
+                case 1:
+                    tareasPendientes = p.crearTareas(tareasPendientes);
+                    break;
+                case 2:
+                    p.MostrarTareas(tareasPendientes, "pendientes");
+                    p.MostrarTareas(tareasRealizadas, "realizadas");
+                    break;
+                case 3:
+                    p.pendientesArealizadas(tareasRealizadas, tareasPendientes);
+                    break;
+                case 4:
+                    p.BusquedaTareasPorDescripcion(tareasPendientes);
+                    break;
+                case 5:
+                    salir = true;
+                    Console.WriteLine("Saliendo del programa...");
+                    break;
+            }
+                  
+        }    
+    }
 
 }
 
