@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/ToDo/ToDo.csproj",
+                "${workspaceFolder}/CalculadoraHistorial/CalculadoraHistorial.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/ToDo/ToDo.csproj",
+                "${workspaceFolder}/CalculadoraHistorial/CalculadoraHistorial.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/ToDo/ToDo.csproj"
+                "${workspaceFolder}/CalculadoraHistorial/CalculadoraHistorial.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

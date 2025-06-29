@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/ToDo/bin/Debug/net8.0/ToDo.dll",
+            "program": "${workspaceFolder}/CalculadoraHistorial/bin/Debug/net8.0/CalculadoraHistorial.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/ToDo",
+            "cwd": "${workspaceFolder}/CalculadoraHistorial",
             "console": "integratedTerminal",
             "stopAtEntry": false
         },
